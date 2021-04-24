@@ -5,8 +5,8 @@ import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.OUT)
 GPIO.setup(13, GPIO.OUT)
-tfreq = 500  # top Frequency
-bfreq = 500  # bottom Frequency
+tfreq = 24  # top Frequency
+bfreq = 24  # bottom Frequency
 wstrt = 5   # time between wheel startup
 ofst = 3    # offset for wheel control
 
@@ -35,12 +35,24 @@ while True:
             i = i + 1
             print("-" * i)
             time.sleep(.5)
-        s = int(input("what speed do you want? 1-100 : "))
-        if 0 <= s <= 100:
-            t.ChangeDutyCycle(s)
-            b.ChangeDutyCycle(s)
-        else:
-            print("not a valid entry. ")
+        while True:
+            s = int(input("Dhat speed do you want? 1-100 : "))
+            if 0 <= s <= 100:
+                t.ChangeDutyCycle(s)
+                b.ChangeDutyCycle(s)
+            else:
+                print("not a valid entry. ")
+            while True:
+                cont = input("Do you want to change the speed? Y/N : ").lower()
+                if cont == "Y":
+                    break
+                if cont == "N":
+                    ex = input("do you want to quit? : ")
+
+
+
+
+
     elif command == "quit":
         t.stop(0)
         b.stop(0)
