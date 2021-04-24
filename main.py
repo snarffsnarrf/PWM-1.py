@@ -36,7 +36,7 @@ while True:
             print("-" * i)
             time.sleep(.5)
         while True:
-            s = int(input("Dhat speed do you want? 1-100 : "))
+            s = int(input("What speed do you want? 1-100 : "))
             if 0 <= s <= 100:
                 t.ChangeDutyCycle(s)
                 b.ChangeDutyCycle(s)
@@ -48,13 +48,14 @@ while True:
                     break
                 if cont == "N":
                     ex = input("do you want to quit? : ")
-
-
-
-
-
+                    if ex == "Y":
+                        command = "quit"
+                    else:
+                        break
+                else:
+                    print("not a valid entry. ")
     elif command == "quit":
-        t.stop(0)
-        b.stop(0)
+        t.stop()
+        b.stop()
         break
 GPIO.cleanup()
