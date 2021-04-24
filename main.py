@@ -1,3 +1,4 @@
+
 # A test for PWM and experimenting with frequency & duty cycle
 import RPi.GPIO as GPIO
 import time
@@ -20,6 +21,7 @@ t = GPIO.PWM(11, tfreq)
 b = GPIO.PWM(13, bfreq)
 
 command = ""
+start = ""
 
 while True:
     command = input(">>> ").lower()
