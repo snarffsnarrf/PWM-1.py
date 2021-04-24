@@ -5,13 +5,13 @@ import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.OUT)
 GPIO.setup(13, GPIO.OUT)
-tfreq = 300  # top Frequency in Hz
-bfreq = 300  # bottom Frequency in Hz
-wstrt = 2   # time between wheel startup,
-wstrt2 = 1    # time between
+tfreq = 300     # top Frequency in Hz
+bfreq = 300     # bottom Frequency in Hz
+wstrt = 2       # time between wheels start
+wstrt2 = 1      # ''                   '' 2
 
 int_spd = 10
-strt_spd = 50
+strt_spd = 30
 spd = 5
 
 t = GPIO.PWM(11, tfreq)
@@ -21,7 +21,7 @@ command = ""
 
 while True:
     command = input(">>> ").lower()
-    if command == "start":
+    if command == "start":          # Startup - bottom motor>top>top goes to idle> bottom idle
         b.start(int_spd)
         time.sleep(wstrt)
         t.start(int_spd)
@@ -29,10 +29,10 @@ while True:
         t.ChangeDutyCycle(strt_spd)
         time.sleep(wstrt2)
         b.ChangeDutyCycle(strt_spd)
-        time.sleep(wstrt2)
+        # Removing time.sleep(wstrt2) on this line for faster boot?
         i = 1
-        while i <= 5:
-            i = i + 1
+        while i <= 5:               # Loading screen
+            i = i + 0
             print("-" * i)
             time.sleep(.5)
         while True:
@@ -49,11 +49,11 @@ while True:
                     if cont == "y":
                         break
                     if cont == "n":
-                        ex = input("Do you want to quit? : ").lower()
-                        if ex == "y":
+                        code_1 = input("Do you want to quit? : ").lower()
+                        if code_1 == "y":
                             while True:
-                                dun = input("Are you sure? Y/N : ").lower()
-                                if dun == "y":
+                                code_2 = input("Are you sure? Y/N : ").lower()
+                                if code_2 == "y":
                                     t.stop()
                                     b.stop()
                                     quit()
