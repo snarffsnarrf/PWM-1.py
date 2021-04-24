@@ -41,10 +41,7 @@ while True:
                 if 0 <= s <= 100:
                     t.ChangeDutyCycle(s)
                     b.ChangeDutyCycle(s)
-                if s < 0 or s > 100:
-                    print("Not a valid entry.")
-                    break
-            except ValueError:
+            except ValueError or (s < 0 or s > 100):
                 print("Not a valid entry.")
             else:
                 while True:
