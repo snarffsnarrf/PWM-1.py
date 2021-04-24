@@ -5,10 +5,10 @@ import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.OUT)
 GPIO.setup(13, GPIO.OUT)
-tfreq = 300  # top Frequency
-bfreq = 300  # bottom Frequency
-wstrt = 2   # time between wheel startup
-ofst = 1    # offset for wheel control
+tfreq = 300  # top Frequency in Hz
+bfreq = 300  # bottom Frequency in Hz
+wstrt = 2   # time between wheel startup,
+wstrt2 = 1    # time between
 
 int_spd = 10
 strt_spd = 50
@@ -25,11 +25,11 @@ while True:
         b.start(int_spd)
         time.sleep(wstrt)
         t.start(int_spd)
-        time.sleep(5)
+        time.sleep(wstrt)
         t.ChangeDutyCycle(strt_spd)
-        time.sleep(ofst)
+        time.sleep(wstrt2)
         b.ChangeDutyCycle(strt_spd)
-        time.sleep(2.5)
+        time.sleep(wstrt2)
         i = 1
         while i <= 5:
             i = i + 1
@@ -54,6 +54,8 @@ while True:
                             while True:
                                 dun = input("Are you sure? Y/N : ").lower()
                                 if dun == "y":
+                                    t.stop()
+                                    b.stop()
                                     quit()
                                 else:
                                     break
