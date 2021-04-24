@@ -6,25 +6,26 @@ import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.OUT)
 GPIO.setup(13, GPIO.OUT)
-GPIO.setup(16, GPIO.OUT)    # direction control?
-GPIO.setup(18, GPIO.OUT)    # direction control?
-GPIO.setup(29, GPIO.OUT)    # direction control?
-GPIO.setup(31, GPIO.OUT)
+GPIO.setup(16, GPIO.OUT)    # direction control t.1
+GPIO.setup(18, GPIO.OUT)    # direction control t.2
+GPIO.setup(29, GPIO.OUT)    # direction control b.1
+GPIO.setup(31, GPIO.OUT)    # direction control b.2
 
-freq = 100
-tfreq = 24     # top Frequency in Hz // is just for light to illustrate
-bfreq = freq     # bottom Frequency in Hz
-wstrt = 3       # time between wheels start
-wstrt2 = 2      # ''                   '' 2
+p_freq = 100        # Master PWM Frequency
+tfreq = p_freq      # top Frequency in Hz // is just for light to illustrate
+bfreq = p_freq      # bottom Frequency in Hz
+wstrt = 3           # time between wheels start
+wrmp = 2            # time between wheels ramp up
 err = "Not a valid entry"
 
+# Control Module
 int_spd = 25
 strt_spd = 35
 spd = 5
 load_tm = .25
 
-t = GPIO.PWM(11, tfreq)
-b = GPIO.PWM(13, bfreq)
+top = GPIO.PWM(11, tfreq)
+bot = GPIO.PWM(13, bfreq)
 
 
 command = ""
@@ -41,15 +42,15 @@ while True:
         GPIO.output(16, True)
         GPIO.output(18, False)
         GPIO.output(29, True)
-        GPIO.output(31, False)
-        b.start(int_spd)
+        GPIO.output(31, False)  # Can change when you get a real second motor.
+        bot.start(int_spd)
         time.sleep(wstrt)
-        t.start(int_spd)
+        top.start(int_spd)
         time.sleep(wstrt)
-        t.ChangeDutyCycle(strt_spd)
-        time.sleep(wstrt2)
-        b.ChangeDutyCycle(strt_spd)
-        # Removing time.sleep(wstrt2) on this line for faster boot?
+        top.ChangeDutyCycle(strt_spd)
+        time.sleep(wrmp)
+        bot.ChangeDutyCycle(strt_spd)
+        time.sleep(wrmp)
         i = 6
         while i <= 10:               # Loading screen
             i = i + 1
@@ -61,8 +62,8 @@ while True:
                 if 100 < s or s < 0:
                     print(err)
                 if 0 <= s <= 100:
-                    t.ChangeDutyCycle(s)
-                    b.ChangeDutyCycle(s)
+                    top.ChangeDutyCycle(s)
+                    bot.ChangeDutyCycle(s)
                     print("Changing speed")
                 if s == "quit":
                     GPIO.cleanup()
@@ -81,8 +82,8 @@ while True:
                             while True:
                                 code_2 = input("Are you sure? Y/N : ").lower()
                                 if code_2 == "y":
-                                    t.stop()
-                                    b.stop()
+                                    top.stop()
+                                    bot.stop()
                                     GPIO.cleanup()
                                     time.sleep(1)
                                     quit()
@@ -93,7 +94,7 @@ while True:
                     else:
                         print("Not a valid entry. ")
     if command == "quit":
-        t.stop()
-        b.stop()
+        top.stop()
+        bot.stop()
         break
 GPIO.cleanup()
