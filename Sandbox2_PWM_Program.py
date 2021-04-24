@@ -19,8 +19,8 @@ wrmp = 2            # time between wheels ramp up
 err = "Not a valid entry"
 
 # Control Module
-int_spd = 25
-strt_spd = 35
+int_spd = 40
+strt_spd = 55
 spd = 5
 load_tm = .25
 
@@ -62,6 +62,18 @@ while True:
         time.sleep(wrmp)
         top.ChangeDutyCycle(40)
         bot.ChangeDutyCycle(40)
+        time.sleep(wrmp)
+        top.ChangeDutyCycle(0)
+        bot.ChangeDutyCycle(100)
+        time.sleep(wrmp)
+        top.ChangeDutyCycle(100)
+        bot.ChangeDutyCycle(0)
+        time.sleep(wrmp)
+        top.ChangeDutyCycle(0)
+        bot.ChangeDutyCycle(100)
+        time.sleep(wrmp)
+        top.ChangeDutyCycle(100)
+        bot.ChangeDutyCycle(0)
         time.sleep(wrmp)
         top.ChangeDutyCycle(0)
         bot.ChangeDutyCycle(100)
