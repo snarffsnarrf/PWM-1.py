@@ -5,14 +5,16 @@ import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.OUT)
 GPIO.setup(13, GPIO.OUT)
-tfreq = 300     # top Frequency in Hz
-bfreq = 300     # bottom Frequency in Hz
-wstrt = 2       # time between wheels start
-wstrt2 = 1      # ''                   '' 2
+tfreq = 12     # top Frequency in Hz
+bfreq = 12     # bottom Frequency in Hz
+wstrt = 3       # time between wheels start
+wstrt2 = 2      # ''                   '' 2
+err = ("Not a valid entry")
 
 int_spd = 10
 strt_spd = 30
 spd = 5
+load_tm = .25
 
 t = GPIO.PWM(11, tfreq)
 b = GPIO.PWM(13, bfreq)
@@ -22,6 +24,11 @@ command = ""
 while True:
     command = input(">>> ").lower()
     if command == "start":          # Startup - bottom motor>top>top goes to idle> bottom idle
+        i = 1
+        while i <= 5:               # Loading screen
+            i = i + 1
+            print("-" * i)
+            time.sleep(load_tm)
         b.start(int_spd)
         time.sleep(wstrt)
         t.start(int_spd)
@@ -30,19 +37,26 @@ while True:
         time.sleep(wstrt2)
         b.ChangeDutyCycle(strt_spd)
         # Removing time.sleep(wstrt2) on this line for faster boot?
-        i = 1
-        while i <= 5:               # Loading screen
-            i = i + 0
+        i = 6
+        while i <= 10:               # Loading screen
+            i = i + 1
             print("-" * i)
-            time.sleep(.5)
+            time.sleep(load_tm)
         while True:
             try:
-                s = int(input("What speed do you want? 1-100 : "))
+                s = float(input("What speed do you want? 1-100 : "))
+                if 100 < s or s < 0:
+                    print(err)
                 if 0 <= s <= 100:
                     t.ChangeDutyCycle(s)
                     b.ChangeDutyCycle(s)
-            except ValueError or (s < 0 or s > 100):
-                print("Not a valid entry.")
+                    print("Changing speed")
+                if s == "quit":
+                    GPIO.cleanup()
+                    time.sleep(1)
+                    quit()
+            except ValueError:
+                print(err)
             else:
                 while True:
                     cont = input("Do you want to change the speed? Y/N : ").lower()
@@ -56,6 +70,8 @@ while True:
                                 if code_2 == "y":
                                     t.stop()
                                     b.stop()
+                                    GPIO.cleanup()
+                                    time.sleep(1)
                                     quit()
                                 else:
                                     break
