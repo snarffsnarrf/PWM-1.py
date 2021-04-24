@@ -5,10 +5,10 @@ import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.OUT)
 GPIO.setup(13, GPIO.OUT)
-tfreq = 24  # top Frequency
-bfreq = 24  # bottom Frequency
-wstrt = 5   # time between wheel startup
-ofst = 3    # offset for wheel control
+tfreq = 300  # top Frequency
+bfreq = 300  # bottom Frequency
+wstrt = 2   # time between wheel startup
+ofst = 1    # offset for wheel control
 
 int_spd = 10
 strt_spd = 50
@@ -25,36 +25,46 @@ while True:
         b.start(int_spd)
         time.sleep(wstrt)
         t.start(int_spd)
-        time.sleep(10)
+        time.sleep(5)
         t.ChangeDutyCycle(strt_spd)
         time.sleep(ofst)
         b.ChangeDutyCycle(strt_spd)
-        time.sleep(5)
+        time.sleep(2.5)
         i = 1
         while i <= 5:
             i = i + 1
             print("-" * i)
             time.sleep(.5)
         while True:
-            s = int(input("What speed do you want? 1-100 : "))
-            if 0 <= s <= 100:
-                t.ChangeDutyCycle(s)
-                b.ChangeDutyCycle(s)
-            else:
-                print("not a valid entry. ")
-            while True:
-                cont = input("Do you want to change the speed? Y/N : ").lower()
-                if cont == "Y":
+            try:
+                s = int(input("What speed do you want? 1-100 : "))
+                if 0 <= s <= 100:
+                    t.ChangeDutyCycle(s)
+                    b.ChangeDutyCycle(s)
+                if s < 0 or s > 100:
+                    print("Not a valid entry.")
                     break
-                if cont == "N":
-                    ex = input("do you want to quit? : ")
-                    if ex == "Y":
-                        command = "quit"
-                    else:
+            except ValueError:
+                print("Not a valid entry.")
+            else:
+                while True:
+                    cont = input("Do you want to change the speed? Y/N : ").lower()
+                    if cont == "y":
                         break
-                else:
-                    print("not a valid entry. ")
-    elif command == "quit":
+                    if cont == "n":
+                        ex = input("Do you want to quit? : ").lower()
+                        if ex == "y":
+                            while True:
+                                dun = input("Are you sure? Y/N : ").lower()
+                                if dun == "y":
+                                    quit()
+                                else:
+                                    break
+                        else:
+                            break
+                    else:
+                        print("Not a valid entry. ")
+    if command == "quit":
         t.stop()
         b.stop()
         break
