@@ -5,8 +5,8 @@ import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.OUT)
 GPIO.setup(13, GPIO.OUT)
-tfreq = .1 #top Frequency
-bfreq = .1 #bottom Frequency
+tfreq = .1  # top Frequency
+bfreq = .1  # bottom Frequency
 t = GPIO.PWM(11, tfreq)
 b = GPIO.PWM(13, bfreq)
 
