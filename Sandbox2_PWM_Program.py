@@ -12,7 +12,7 @@ GPIO.setup(29, GPIO.OUT)    # direction control b.1
 GPIO.setup(31, GPIO.OUT)    # direction control b.2
 
 p_freq = 100        # Master PWM Frequency
-tfreq = p_freq      # top Frequency in Hz // is just for light to illustrate
+tfreq = p_freq      # top Frequency in Hz
 bfreq = p_freq      # bottom Frequency in Hz
 wstrt = 3           # time between wheels start
 wrmp = 2            # time between wheels ramp up
